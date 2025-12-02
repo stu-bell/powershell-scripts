@@ -5,6 +5,9 @@ Snippets I pick up while building Powershell scripts.
 
 For more documentation on running Powershell scripts, see: [Microsoft Learn | How to Write and Run Scripts in the Windows PowerShell ISE](https://learn.microsoft.com/en-us/powershell/scripting/windows-powershell/ise/how-to-write-and-run-scripts-in-the-windows-powershell-ise?view=powershell-7.5)
 
+# Scripts and snippets
+See the [scripts folder](./scripts)
+
 # Guides
 
 Quick guides for the following powershell topics:

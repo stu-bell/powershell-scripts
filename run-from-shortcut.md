@@ -29,7 +29,7 @@ C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypas
 
 The icon of the shortcut may change to something like: 
 
-<img src="./imgs/ShortcutProperties.png" width="500">
+<img src="./imgs/ShortcutIcon.png" width="500">
 
 > If you move the script file to a new folder after creating the shortcut, you'll need to recreate the shortcut so it points to the file's new location. 
 

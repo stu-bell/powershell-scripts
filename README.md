@@ -33,5 +33,5 @@ If the script you're creating a shortcut for requires certain arguments, paste t
 
 ## -NoExit
 
-The `-NoExit` flag in the shorcut command tells Powershell to keep the terminal open after the script has finished. This might be useful in case there are error messages, or you'd like to check the script output before it closes. However, if you have a script that you know runs well and just want the terminal window to close automatically after the script completes, remove the -NoExit flag from the shortcut.
+The `-NoExit` flag in the shorcut command tells Powershell to keep the terminal open after the script has finished. This might be useful in case there are error messages, or you'd like to check the script output before it closes. However, if you have a script that you know runs well and just want the terminal window to close automatically after the script completes, remove the -NoExit flag from the shortcut target.
 

@@ -1,6 +1,7 @@
 <#
 .SYNOPSIS
 Restarts a specific device in Windows Device Manager.
+Requires Administrator Privileges.
 
 .DESCRIPTION
 Locates a device by its friendly name, disables and re-enables it to

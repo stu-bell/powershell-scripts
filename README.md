@@ -25,6 +25,10 @@ Note the space between -File and the start of your file path.
 
 Clicking the shortcut you've just created will execute the script. Clicking the original script file will allow you to modify the script text. 
 
+The icon of the shortcut may change to something like: 
+
+![Screenshot of shortcut icon](./imgs/ShortcutIcon.png)
+
 > If you move the script file to a new folder after creating the shortcut, you'll need to recreate the shortcut so it points to the file's new location. 
 
 ## Passing arguments to your script

@@ -41,7 +41,7 @@ Write-Host "Working directory: $PWD"
 if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
     Write-Host -ForegroundColor Red "This script must be run as Administrator. Requesting..."
     $params = ($PSBoundParameters.GetEnumerator() | ForEach-Object { "-$($_.Key) `"$($_.Value -replace '"','""')`"" }) -join ' '
-    $currentDir = (Get-Location).Path
+    $currentDir = (Get-Location).Path # re-run the script command in the same directory 
     $argList = "-NoProfile -ExecutionPolicy Bypass -Command `"Set-Location '$currentDir'; & '$PSCommandPath' $params`""
     Start-Process powershell -ArgumentList $argList -Verb RunAs 
     exit

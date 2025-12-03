@@ -10,8 +10,9 @@ To write a script that automatically prompts the user for administrator privileg
 if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
     Write-Host -ForegroundColor Red "This script must be run as Administrator. Requesting..."
     $params = ($PSBoundParameters.GetEnumerator() | ForEach-Object { "-$($_.Key) `"$($_.Value -replace '"','""')`"" }) -join ' '
-   $argList = "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`" $params"
-    Start-Process powershell -ArgumentList $argList -Verb RunAs
+    $currentDir = (Get-Location).Path # re-run the script command in the same directory 
+    $argList = "-NoProfile -ExecutionPolicy Bypass -Command `"Set-Location '$currentDir'; & '$PSCommandPath' $params`""
+    Start-Process powershell -ArgumentList $argList -Verb RunAs 
     exit
 }
 ```

@@ -1,13 +1,13 @@
 # PowerShell Profile
 
-# ssh into a devpod workspace
 # devpod ssh command isn't working for me on Windows: https://github.com/loft-sh/devpod/issues/1947
 function Ssh-DevPod {
+# ssh into a devpod workspace
     param(
         [string]$Path = "."
     )
-
     try {
+        Write-Host "Getting workspace ID..."
         $workspaceId = (devpod status $Path --output json | ConvertFrom-Json).id
         if ($workspaceId) {
 	    Write-Host "Executing command: ssh $workspaceId.devpod ..."

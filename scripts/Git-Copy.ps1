@@ -37,7 +37,7 @@ param(
 
 # Clone repo. --depth 1 avoids pulling the project history
 Write-Host "Cloning $RepoUrl into $NewName..."
-git clone --depth 1 $RepoUrl $NewName
+git clone --single-branch --depth 1 $RepoUrl $NewName
 
 # Remove the cloned .git directory
 Set-Location $NewName

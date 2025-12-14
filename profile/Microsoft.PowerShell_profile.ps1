@@ -1,29 +1,25 @@
-# PowerShell Profile
+<#
+.NOTES
+	RUNNING SCRIPTS CARRIES RISK. ALWAYS REVIEW SCRIPTS BEFORE RUNNING THEM ON YOUR SYSTEM.
+	IF IN DOUBT, COPY AND PASTE THE SCRIPT INTO A SERVICE LIKE CHATGPT AND ASK IF IT COULD BE HARMFUL.
 
-# devpod ssh command isn't working for me on Windows: https://github.com/loft-sh/devpod/issues/1947
-function Ssh-DevPod {
-# ssh into a devpod workspace
-    param(
-        [string]$Path = "."
-    )
-    try {
-        Write-Host "Getting workspace ID..."
-        $workspaceId = (devpod status $Path --output json | ConvertFrom-Json).id
-        if ($workspaceId) {
-	    Write-Host "Executing command: ssh $workspaceId.devpod ..."
-            ssh "$workspaceId.devpod"
-        } else {
-            Write-Host "No workspace found at path: $Path" -ForegroundColor Red
-        }
-    }
-    catch {
-        Write-Host "Error getting workspace: $_" -ForegroundColor Red
-    }
-}
+.SYNOPSIS
+    Powershell profile
 
-function Start-Devpod {
+.DESCRIPTION
+
+.NOTES
+	Author      : Stuart Bell
+	License     : MIT
+	Repository  : https://github.com/stu-bell/powershell-scripts
+
+.LINK
+	https://github.com/stu-bell/powershell-scripts
+#>
+function Start-DevpodWorkspace {
     # Start devpod workspace using podman, and ssh into workspace
     param(
+        [Parameter(HelpMessage="Path to Devpod Workspace")]
         [string]$WorkspacePath = "."
     )
     try {
@@ -35,9 +31,18 @@ function Start-Devpod {
         } else {
             Write-Host "Podman machine status: $podmanStatus"
         }
-        Write-Host "Executing command: devpod up $WorkspacePath ..."
-        devpod up $WorkspacePath
-        Ssh-Devpod $WorkspacePath
+
+        Write-Host "Checking Devpod status..."
+        $devpodStatus = (devpod status $WorkspacePath --output json | ConvertFrom-Json)
+        if ($devpodStatus.state -eq "Stopped") {
+            Write-Host "Executing command: devpod up $WorkspacePath ..."
+            devpod up $WorkspacePath
+        } else {
+            Write-Host "Devpod status: $($devpodStatus.state)"
+        }
+
+        Write-Host "Executing command: ssh $($devpodStatus.id).devpod ..."
+        ssh "$($devpodStatus.id).devpod"
     }
     catch {
         Write-Host "Error starting workspace: $_" -ForegroundColor Red
@@ -48,5 +53,5 @@ function Start-Devpod {
 # dev                           # Uses current directory
 # dev C:\path\to\project        # Uses specified path
 # dev ..\other-project          # Uses relative path
-Set-Alias -Name dev -Value Start-Devpod
+Set-Alias -Name dev -Value Start-DevpodWorkspace
 

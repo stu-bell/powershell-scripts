@@ -21,9 +21,32 @@ function Ssh-DevPod {
     }
 }
 
+function Start-Devpod {
+    # Start devpod workspace using podman, and ssh into workspace
+    param(
+        [string]$WorkspacePath = "."
+    )
+    try {
+        Write-Host "Checking podman machine status..."
+        $podmanStatus = (podman machine info -f json | ConvertFrom-Json).Host.MachineState
+        if ($podmanStatus -eq "Stopped") {
+            Write-Host "Starting podman machine..."
+            podman machine start
+        } else {
+            Write-Host "Podman machine status: $podmanStatus"
+        }
+        Write-Host "Executing command: devpod up $WorkspacePath ..."
+        devpod up $WorkspacePath
+        Ssh-Devpod $WorkspacePath
+    }
+    catch {
+        Write-Host "Error starting workspace: $_" -ForegroundColor Red
+    }
+}
+
 # Usage:
-# shd                           # Uses current directory
-# shd C:\path\to\project        # Uses specified path
-# shd ..\other-project          # Uses relative path
-Set-Alias -Name shd -Value Ssh-DevPod
+# dev                           # Uses current directory
+# dev C:\path\to\project        # Uses specified path
+# dev ..\other-project          # Uses relative path
+Set-Alias -Name dev -Value Start-Devpod
 

@@ -37,6 +37,11 @@ function Start-DevpodWorkspace {
         if ($devpodStatus.state -eq "Stopped") {
             Write-Host "Executing command: devpod up $WorkspacePath ..."
             devpod up $WorkspacePath
+        } elseif ($devpodStatus.state -eq "NotFound") {
+            Write-Host "Executing command: devpod up $WorkspacePath ..."
+            devpod up $WorkspacePath
+            # NotFound => first time, need to get status again for the ID
+            $devpodStatus = (devpod status $WorkspacePath --output json | ConvertFrom-Json)
         } else {
             Write-Host "Devpod status: $($devpodStatus.state)"
         }

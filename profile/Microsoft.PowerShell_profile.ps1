@@ -35,7 +35,7 @@ function Start-DevpodWorkspace {
             Write-Host "ssh $($devpodStatus.id).devpod ..."
             ssh "$($devpodStatus.id).devpod"
             Write-Host "SSH session ended but devpod still running..."
-            return
+            return # job done, return early
         }
 
         # start devpod if needed
@@ -45,8 +45,7 @@ function Start-DevpodWorkspace {
         } elseif ($devpodStatus.state -eq "NotFound") {
             Write-Host "Executing command: devpod up $WorkspacePath ..."
             devpod up $WorkspacePath
-            # NotFound => first time, need to get status again for the ID
-            $devpodStatus = (devpod status $WorkspacePath --output json | ConvertFrom-Json)
+            $devpodStatus = (devpod status $WorkspacePath --output json | ConvertFrom-Json) # needed for new workspaces
         } else {
             Write-Host "Devpod status: $($devpodStatus.state)"
         }

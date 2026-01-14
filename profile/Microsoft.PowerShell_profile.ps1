@@ -23,17 +23,22 @@ function Start-DevpodWorkspace {
         [string]$WorkspacePath = "."
     )
     try {
-        Write-Host "Checking podman machine status..."
-        $podmanStatus = (podman machine info -f json | ConvertFrom-Json).Host.MachineState
-        if ($podmanStatus -eq "Stopped") {
-            Write-Host "Starting podman machine..."
-            podman machine start
-        } else {
-            Write-Host "Podman machine status: $podmanStatus"
-        }
-
         Write-Host "Checking Devpod status..."
         $devpodStatus = (devpod status $WorkspacePath --output json | ConvertFrom-Json)
+        if ($LASTEXITCODE -ne 0) {
+            # Start podman, devpod and retry ssh
+            Write-Host "Starting podman machine..."
+            podman machine start
+            Write-Host "Starting devpod workspace..."
+            devpod up $WorkspacePath
+            $devpodStatus = (devpod status $WorkspacePath --output json | ConvertFrom-Json) # needed for new workspaces
+            Write-Host "ssh $($devpodStatus.id).devpod ..."
+            ssh "$($devpodStatus.id).devpod"
+            Write-Host "SSH session ended but devpod still running..."
+            return
+        }
+
+        # start devpod if needed
         if ($devpodStatus.state -eq "Stopped") {
             Write-Host "Executing command: devpod up $WorkspacePath ..."
             devpod up $WorkspacePath
@@ -46,8 +51,9 @@ function Start-DevpodWorkspace {
             Write-Host "Devpod status: $($devpodStatus.state)"
         }
 
-        Write-Host "Executing command: ssh $($devpodStatus.id).devpod ..."
+        Write-Host "ssh $($devpodStatus.id).devpod ..."
         ssh "$($devpodStatus.id).devpod"
+        Write-Host "SSH session ended but devpod still running..."
     }
     catch {
         Write-Host "Error starting workspace: $_" -ForegroundColor Red

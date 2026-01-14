@@ -23,8 +23,9 @@ function Start-DevpodWorkspace {
         [string]$WorkspacePath = "."
     )
     try {
-        Write-Host "Checking Devpod status..."
-        $devpodStatus = (devpod status $WorkspacePath --output json | ConvertFrom-Json)
+        # need to check devpod status before attempting ssh, as ssh when devpod is down triggers devpod up, but hangs
+        Write-Host "Checking Devpod status..." 
+        $devpodStatus = (devpod status $WorkspacePath --output json 2>$null | ConvertFrom-Json)
         if ($LASTEXITCODE -ne 0) {
             # Start podman, devpod and retry ssh
             Write-Host "Starting podman machine..."
@@ -40,10 +41,10 @@ function Start-DevpodWorkspace {
 
         # start devpod if needed
         if ($devpodStatus.state -eq "Stopped") {
-            Write-Host "Executing command: devpod up $WorkspacePath ..."
+            Write-Host "devpod up $WorkspacePath ..."
             devpod up $WorkspacePath
         } elseif ($devpodStatus.state -eq "NotFound") {
-            Write-Host "Executing command: devpod up $WorkspacePath ..."
+            Write-Host "devpod up $WorkspacePath ..."
             devpod up $WorkspacePath
             $devpodStatus = (devpod status $WorkspacePath --output json | ConvertFrom-Json) # needed for new workspaces
         } else {

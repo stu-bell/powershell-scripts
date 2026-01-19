@@ -25,13 +25,13 @@ function Start-DevpodWorkspace {
         [Parameter(HelpMessage="Rebuild the workspace by deleting and pruning images")]
         [switch]$Rebuild,
 
-        [Parameter(HelpMessage="Force image pruning without confirmation")]
-        [switch]$Force
+        [Parameter(HelpMessage="Rebuild the workspace by deleting and pruning images. Do not ask for user confirmation.")]
+        [switch]$RebuildForce
     )
     try {
         # Handle rebuild if requested
-        if ($Rebuild) {
-            if (-not $Force) {
+        if ($Rebuild -or $RebuildForce) {
+            if (-not $RebuildForce) {
                     Write-Host "-Rebuild removes ALL podman images without at least one container associated with them. This includes images not associated with this DevPod workspace. To cancel, press Ctrl-C" -ForegroundColor Yellow
             }
             Write-Host "Rebuilding devpod workspace..."
@@ -40,7 +40,7 @@ function Start-DevpodWorkspace {
             Write-Host "Deleting workspace..."
             devpod delete $WorkspacePath
             Write-Host "Pruning podman images..."
-            $flags = if ($Force) { "-af" } else { "-a" }
+            $flags = if ($RebuildForce) { "-af" } else { "-a" }
             podman image prune $flags
         }
 
@@ -83,5 +83,6 @@ function Start-DevpodWorkspace {
 # dev C:\path\to\project        # Uses specified path
 # dev ..\other-project          # Uses relative path
 # dev -Rebuild                  # Rebuilds workspace in current directory
+# dev -RebuildForce             # Rebuilds workspace in current directory without prompting for user confirmation
 # dev C:\path\to\project -Rebuild  # Rebuilds workspace at specified path
 Set-Alias -Name dev -Value Start-DevpodWorkspace

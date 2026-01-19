@@ -31,6 +31,9 @@ function Start-DevpodWorkspace {
     try {
         # Handle rebuild if requested
         if ($Rebuild) {
+            if (-not $Force) {
+                    Write-Host "-Rebuild removes ALL podman images without at least one container associated with them. This includes images not associated with this DevPod workspace. To cancel, press Ctrl-C" -ForegroundColor Yellow
+            }
             Write-Host "Rebuilding devpod workspace..."
             Write-Host "Starting podman machine..."
             podman machine start

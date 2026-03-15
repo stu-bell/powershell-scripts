@@ -8,9 +8,9 @@
 
 .DESCRIPTION
     Demo of a PowerShell script that asks for user confirmation, prints the result, then exits.
-    Force switch is supported.
+    NonInteractive switch is supported.
 
-.PARAMETER Force
+.PARAMETER NonInteractive
     Prevents prompts for user input. Inteded for automated execution.
 
 .NOTES
@@ -24,21 +24,22 @@
 param(
  [switch]
  [Parameter(HelpMessage = "Prevents prompts for user input. Inteded for automated execution.")]
- $Force
+ $NonInteractive
  )
 
 function Get-UserConfirmation {
-    # Ask for user confirmation via keyboard, unless -Force switch has been supplied
-    # This assumes there is a $Force parameter at script level
-    # If calling from another file, use the explicit Force parameter: Get-UserConfirmation -Force:$Force
+    # Ask for user confirmation via keyboard, unless -Skip switch has been supplied
+    # Pass variable value to Skip flag (eg parent script contains a -NonInteractive switch):
+    # Get-UserConfirmation -Skip:$NonInteractive
+    # Or, set the default value of $Skip to a script paremeter, or use $PSDefaultParameterValues
     param(
+        [switch]$Skip=$script:NonInteractive,
 	    [string]$ConfirmText="yes",
 	    [string]$Message="Type '$ConfirmText' then enter to continue, or enter to cancel",
-	    [string]$NoText="Action cancelled by user.",
-        [switch]$Force
+	    [string]$NoText="Action cancelled by user."
 	)
-    # return early if $Force
-    if ($script:Force -or $Force) {
+    # return early if $Skip
+    if ($Skip) {
         return $True
     }
     # wait for specific key
@@ -51,7 +52,7 @@ function Get-UserConfirmation {
 }
 
 # demo get user confirmation 
-Write-Host "Compare running this demo script with and without the -Force parameter."
+Write-Host "Compare running this demo script with and without the -NonInteractive parameter."
 if (Get-UserConfirmation) {
     Write-Host "User said yes"
 } else {

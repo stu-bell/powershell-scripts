@@ -28,7 +28,7 @@ param(
 
 function Show-Help {
     Write-Host @"
-$($MyInvocation.MyCommand.Name)
+$($script:MyInvocation.MyCommand.Name)
 
 Demo script for showing help for different switches.
 
@@ -37,7 +37,7 @@ Run this script with -Help switch and any of the other parameters.
 PARAMETERS:
 	-Help		Include -Help switch alongside other switches
 				to show help for specific switches,
-				eg: $($MyInvocation.MyCommand.Name) -Help -OptionA
+				eg: $($script:MyInvocation.MyCommand.Name) -Help -OptionA
 	-OptionA	Use OptionA
 	-OptionB	Use OptionB
 	-InputText	Text parameter

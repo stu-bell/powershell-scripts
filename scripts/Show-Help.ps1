@@ -32,6 +32,10 @@ $($script:MyInvocation.MyCommand.Name)
 
 Demo script for showing help for different switches.
 
+For doc comment, use -? switch: $($script:MyInvocation.MyCommand.Name) -?
+
+See also: Get-Help .\$($script:MyInvocation.MyCommand.Name) -detailed
+
 Run this script with -Help switch and any of the other parameters.
 
 PARAMETERS:

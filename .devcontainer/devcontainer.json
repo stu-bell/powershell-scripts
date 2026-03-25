@@ -1,0 +1,17 @@
+{
+  "name": "PowerShell",
+  "image": "mcr.microsoft.com/devcontainers/base:debian",
+  "features": {
+    "ghcr.io/devcontainers/features/powershell:2": {},
+    "ghcr.io/stu-bell/devcontainer-features/claude-code": {},
+    "ghcr.io/stu-bell/devcontainer-features/neovim": {
+      "CONFIG_GIT_URL": "https://github.com/stu-bell/nvim.git"
+    },
+    "ghcr.io/stu-bell/devcontainer-features/homebrew": {
+      "brewPackage": "hmans/beans/beans"
+    }
+  }
+  // change default login shell to powershell for remoteuser vscode
+  // FIXME: changing the default shell this way breaks ssh into the devcontainer
+  //"postCreateCommand": "sudo chsh vscode -s \"$(which pwsh)\""
+}
